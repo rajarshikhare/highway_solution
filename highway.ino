@@ -8,9 +8,32 @@ void setup()
     Serial.begin(9600);
 }
 
+ int slowON(int pin){
+     int count = 0;
+    for(int i = 0; i < 255; i++){
+        analogWrite(pin, i);
+        delay(2);
+        if (digitalRead(3) == HIGH)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+void slowDim(int pin, int dim_intensity){
+    for(int i = 255; i >= dim_intensity; i--){
+        analogWrite(pin, i);
+        delay(5);
+    }
+}
+
 bool i = false;
 int count = 0;
 bool counted = false;
+
+
+
 void loop()
 {
     digitalWrite(8, HIGH);
@@ -18,13 +41,13 @@ void loop()
     {
         digitalWrite(13, HIGH);
         delay(250);
-        counted = false;
         digitalWrite(13, LOW);
+        counted = false;
         count = 0;
-        Serial.println("54");
     }
     else if (counted)
     {
+        Serial.println(count);
         counted = false;
         count = 0;
     }
@@ -33,19 +56,11 @@ void loop()
     {
         if (!i)
         {
-            for (int j = 10; j <= 255; j++)
-            {
-                analogWrite(10, j);
-                delay(2);
-                if (digitalRead(3) == HIGH)
-                {
-                    count++;
-                }
-            }
+            count = slowON(10);
             while (digitalRead(3) == HIGH)
             {
                 count++;
-                if (count >= 300)
+                if (count >= 200)
                 {
                     digitalWrite(13, HIGH);
                 }
@@ -60,11 +75,7 @@ void loop()
     {
         if (i)
         {
-            for (int j = 254; j >= 10; j--)
-            {
-                analogWrite(10, j);
-                delay(6);
-            }
+            slowDim(10, 10);
             i = false;
         }
         analogWrite(10, 10);
