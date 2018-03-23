@@ -11,8 +11,6 @@ void setup()
 }
 
 bool carWent = false;
-int count = 0;
-bool counted = false;
 unsigned long start_time = 0;
 unsigned long end_time = 0;
 
