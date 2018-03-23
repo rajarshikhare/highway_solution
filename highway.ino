@@ -6,77 +6,111 @@ void setup()
     pinMode(10, OUTPUT);
     pinMode(13, OUTPUT);
     Serial.begin(9600);
+    digitalWrite(8, HIGH);
 }
 
- int slowON(int pin){
-     int count = 0;
-    for(int i = 0; i < 255; i++){
-        analogWrite(pin, i);
-        delay(2);
-        if (digitalRead(3) == HIGH)
+bool carWent = false;
+int count = 0;
+bool counted = false;
+unsigned long start_time = 0;
+unsigned long end_time = 0;
+
+void slowON(int pin)
+{
+    int i = 10;
+    unsigned long s_tmp_time = millis();
+    bool ended = false;
+    int noise = 0;
+
+    while (i < 255)
+    {
+        int diff = millis() - s_tmp_time;
+        if (diff > 2)
         {
-            count++;
+            analogWrite(pin, i);
+            s_tmp_time = millis();
+            i++;
+        }
+        if (!ended && digitalRead(3) != HIGH)
+        {
+            if (noise > 500)
+            {
+                end_time = millis();
+                ended = true;
+            }
+            else
+            {
+                noise++;
+            }
+        }
+        else if (digitalRead(3) == HIGH)
+        {
+            noise--;
         }
     }
-    return count;
+    while (!ended)
+    {
+        if (!ended && digitalRead(3) != HIGH)
+        {
+            if (noise > 500)
+            {
+                end_time = millis();
+                ended = true;
+            }
+            else
+            {
+                noise++;
+            }
+        }
+        else if (digitalRead(3) == HIGH)
+        {
+            noise--;
+        }
+    }
 }
 
-void slowDim(int pin, int dim_intensity){
-    for(int i = 255; i >= dim_intensity; i--){
+void slowDim(int pin, int dim_intensity)
+{
+    for (int i = 255; i >= dim_intensity; i--)
+    {
         analogWrite(pin, i);
         delay(5);
     }
 }
 
-bool i = false;
-int count = 0;
-bool counted = false;
-
-
-
-void loop()
+void buzz()
 {
-    digitalWrite(8, HIGH);
-    if (counted && count <= 80)
+    int diff = end_time - start_time;
+
+    Serial.print((float)70/diff);
+    Serial.println("m/s");
+    if (diff < 250)
     {
         digitalWrite(13, HIGH);
         delay(250);
         digitalWrite(13, LOW);
-        counted = false;
-        count = 0;
     }
-    else if (counted)
-    {
-        Serial.println(count);
-        counted = false;
-        count = 0;
-    }
+}
+
+void loop()
+{
 
     if (digitalRead(3) == HIGH)
     {
-        if (!i)
+        if (!carWent)
         {
-            count = slowON(10);
-            while (digitalRead(3) == HIGH)
-            {
-                count++;
-                if (count >= 200)
-                {
-                    digitalWrite(13, HIGH);
-                }
-                delay(500);
-            }
-            digitalWrite(13, LOW);
-            counted = true;
-            i = true;
+            start_time = millis();
+            slowON(10);
+            carWent = true;
         }
     }
     else
     {
-        if (i)
+        if (carWent)
         {
+            buzz();
             slowDim(10, 10);
-            i = false;
+            carWent = false;
         }
         analogWrite(10, 10);
     }
