@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#line 1 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+#line 1 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
 #include "lights.h"
 
 void setup()

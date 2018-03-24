@@ -1,5 +1,19 @@
+#include <Arduino.h>
+#line 1 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+#line 1 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
 #include "lights.h"
 
+#line 3 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+void setup();
+#line 19 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+void slowON(street_light s);
+#line 58 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+void slowDim(street_light s, int dim_intensity);
+#line 66 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+void buzz();
+#line 79 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
+void loop();
+#line 3 "c:\\Users\\rajarshi\\Desktop\\audino\\highway.ino"
 void setup()
 {
     pinMode(8, OUTPUT);
