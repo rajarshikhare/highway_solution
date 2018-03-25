@@ -1,7 +1,6 @@
 #include "lights.h"
 
-void setup()
-{
+void setup() {
     pinMode(8, OUTPUT);
     pinMode(3, INPUT);
     pinMode(10, OUTPUT);
@@ -14,8 +13,7 @@ bool carWent = false;
 unsigned long start_time = 0;
 unsigned long end_time = 0;
 
-void slowON(street_light s)
-{
+void slowON(street_light s) {
     int i = light_intensity;
     unsigned long s_tmp_time = millis();
     bool ended = false;
@@ -53,16 +51,14 @@ void slowON(street_light s)
     }
 }
 
-void slowDim(street_light s, int dim_intensity)
-{
+void slowDim(street_light s, int dim_intensity) {
     for (int i = 255; i >= dim_intensity; i--) {
         analogWrite(s.led_port, i);
         delay(2);
     }
 }
 
-void buzz()
-{
+void buzz() {
     int diff = end_time - start_time;
 
     Serial.print((float)70 / diff);
@@ -74,9 +70,7 @@ void buzz()
     }
 }
 
-void loop()
-{
-    
+void loop() {
     for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
         if (digitalRead(st[pole_no].ir_port) == HIGH) {
             if (!carWent) {
