@@ -14,8 +14,6 @@ bool carWent = false;
 unsigned long start_time = 0;
 unsigned long end_time = 0;
 
-int light_intensity = 1;
-
 void slowON(street_light s)
 {
     int i = light_intensity;
@@ -70,16 +68,16 @@ void buzz()
     Serial.print((float)70 / diff);
     Serial.println("m/s");
     if (diff < 250) {
-        digitalWrite(13, HIGH);
+        digitalWrite(buzzer_pin, HIGH);
         delay(250);
-        digitalWrite(13, LOW);
+        digitalWrite(buzzer_pin, LOW);
     }
 }
 
 void loop()
 {
     
-    for (int pole_no = 0; pole_no < 1; pole_no++) {
+    for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
         if (digitalRead(st[pole_no].ir_port) == HIGH) {
             if (!carWent) {
                 start_time = millis();
