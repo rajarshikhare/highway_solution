@@ -1,15 +1,17 @@
-#include "RunningAverage.h"
-#include "RunningMedian.h"
-#include "lights.h"
+# 1 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+# 1 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+# 2 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino" 2
+# 3 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino" 2
+# 4 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino" 2
 
 
 void setup() {
     for (int i = 0; i < no_of_pole; i++) {
-        pinMode(st[i].led_port, OUTPUT);
-        pinMode(st[i].ir_port, INPUT);
+        pinMode(st[i].led_port, 0x1);
+        pinMode(st[i].ir_port, 0x0);
     }
-    pinMode(buzzer_pin, OUTPUT);
-    pinMode(ldr, OUTPUT);
+    pinMode(buzzer_pin, 0x1);
+    pinMode(ldr, 0x1);
     Serial.begin(9600);
 }
 
@@ -19,10 +21,10 @@ void dim(street_light s) { analogWrite(s.led_port, light_intensity); }
 
 void speedBuzz(unsigned long t1, unsigned long t2) {
     if (t2 - t1 < 150) {
-        digitalWrite(buzzer_pin, HIGH);
+        digitalWrite(buzzer_pin, 0x1);
         delay(250);
     }
-    digitalWrite(buzzer_pin, LOW);
+    digitalWrite(buzzer_pin, 0x0);
 }
 
 int getLightIntensity(){
@@ -38,7 +40,7 @@ int getLightIntensity(){
 void loop() {
     light_intensity = getLightIntensity();
     for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
-        if (digitalRead(st[pole_no].ir_port) == LOW) {
+        if (digitalRead(st[pole_no].ir_port) == 0x0) {
             if (!carWent[pole_no] && light_intensity > 0) {
                 start_time[pole_no] = millis();
                 start(st[pole_no]);

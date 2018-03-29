@@ -1,8 +1,24 @@
+#include <Arduino.h>
+#line 1 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 1 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 #include "RunningAverage.h"
 #include "RunningMedian.h"
 #include "lights.h"
 
 
+#line 6 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+void setup();
+#line 16 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+void start(street_light s);
+#line 18 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+void dim(street_light s);
+#line 20 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+void speedBuzz(unsigned long t1, unsigned long t2);
+#line 28 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+int getLightIntensity();
+#line 38 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+void loop();
+#line 6 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void setup() {
     for (int i = 0; i < no_of_pole; i++) {
         pinMode(st[i].led_port, OUTPUT);
@@ -54,3 +70,4 @@ void loop() {
         }
     }
 }
+
