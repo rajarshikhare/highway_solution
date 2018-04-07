@@ -1,5 +1,5 @@
-c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\highway.ino.cpp.o: \
- c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\highway.ino.cpp \
+c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\libraries\SoftwareSerial\SoftwareSerial.cpp.o: \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src\SoftwareSerial.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -12,7 +12,4 @@ c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\highway.ino.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src/SoftwareSerial.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
- c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\RunningAverage.h \
- c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\RunningMedian.h \
- c:\Users\rajarshi\Desktop\New\ folder\Blink_5\build\sketch\lights.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h

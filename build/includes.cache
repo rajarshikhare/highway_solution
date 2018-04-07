@@ -11,6 +11,11 @@
   },
   {
     "Sourcefile": "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\build\\sketch\\highway.ino.cpp",
+    "Include": "SoftwareSerial.h",
+    "Includepath": "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\build\\sketch\\highway.ino.cpp",
     "Include": "",
     "Includepath": ""
   },
@@ -21,6 +26,11 @@
   },
   {
     "Sourcefile": "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\build\\sketch\\RunningMedian.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src\\SoftwareSerial.cpp",
     "Include": "",
     "Includepath": ""
   }
