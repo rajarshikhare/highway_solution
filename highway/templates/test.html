@@ -3,14 +3,14 @@
 
 <div class="block1">
     <h1>Smart Highway System </h1>
-    <img src="/static/desert.png" height="200" width="200">
-    <h1>Road Segment 1->Traffic {{count[0]}}</h1>
-    <h1>Road Segment 2->Traffic : {{count[1]}}</h1>
-    <h1>Road Segment 3->Traffic : {{count[2]}}</h1>
+    <img src="/static/cityscape.png" height="200" width="200">
+    <h1>Road Segment 1:Traffic <meter value="{{count[0]}}" min="0" max="10" low="1" high="6">60%</meter> Speed of last car : {{speed[0]}}M/s</h1>
+    <h1>Road Segment 2:Traffic <meter value="{{count[1]}}" min="0" max="10">60%</meter> Speed of last car : {{speed[1]}}M/s</h1>
+    <h1>Road Segment 3:Traffic <meter value="{{count[2]}}" min="0" max="10">60%</meter> Speed of last car : {{speed[2]}}M/s</h1>
 </div>
 
 <script type="text/javascript">
     setTimeout(function () {
         location.reload();
-    }, 100);
+    }, 500);
 </script>{% endblock %}
