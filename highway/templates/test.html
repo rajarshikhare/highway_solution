@@ -1,0 +1,16 @@
+{% extends "layout.html" %} {% block body %}
+
+
+<div class="block1">
+    <h1>Smart Highway System </h1>
+    <img src="/static/desert.png" height="200" width="200">
+    <h1>Road Segment 1->Traffic {{count[0]}}</h1>
+    <h1>Road Segment 2->Traffic : {{count[1]}}</h1>
+    <h1>Road Segment 3->Traffic : {{count[2]}}</h1>
+</div>
+
+<script type="text/javascript">
+    setTimeout(function () {
+        location.reload();
+    }, 100);
+</script>{% endblock %}

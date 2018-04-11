@@ -7,25 +7,24 @@
 #include "lights.h"
 
 SoftwareSerial BTserial(0, 1);  // RX | TX
-float speed = 0;
 
-#line 9 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 8 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void setup();
-#line 20 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 19 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void start_led(street_light s, int pole_no);
-#line 25 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 28 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void dim(street_light s);
-#line 27 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 30 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void speedBuzz(int pole_no);
-#line 44 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 53 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 int getLightIntensity();
-#line 54 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 63 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void sendData();
-#line 73 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 88 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 int getIrVal(int pole_no);
-#line 84 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 98 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void loop();
-#line 9 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
+#line 8 "c:\\Users\\rajarshi\\Desktop\\New folder\\Blink_5\\highway\\highway.ino"
 void setup() {
     for (int i = 0; i < no_of_pole; i++) {
         pinMode(st[i].led_port, OUTPUT);
@@ -39,22 +38,32 @@ void setup() {
 
 void start_led(street_light s, int pole_no) {
     analogWrite(s.led_port, 255);
-    car_count[pole_no]++;
+    //car_count[pole_no]++;
+    if(millis() - start_time_ir[pole_no] > 1000){
+        car_count[pole_no]++;
+        start_time_ir[pole_no] = millis();
+    }
 }
 
 void dim(street_light s) { analogWrite(s.led_port, light_intensity); }
 
 void speedBuzz(int pole_no) {
+    if(pole_no != 0){
+        car_count[pole_no - 1] = (car_count[pole_no - 1] > 0) ? car_count[pole_no - 1] - 1 : 0; 
+    }
+    sendData();
     if (pole_no == 0) {
         return;
     }
-    car_count[pole_no - 1]--;
-    sendData();
     int t2 = start_time[pole_no];
     int t1 = start_time[pole_no - 1];
     if (t2 - t1 <= 0) return;
-    speed = (float)90 / (float)((t2 - t1));
-    if (speed > 1.0) {
+    float speed_ = (float)90 / (float)((t2 - t1));
+    //Serial.print("speed: ");
+    //Serial.print(speed);
+    //Serial.println("m/s");
+    speed[pole_no - 1 ] = speed_;
+    if (speed_ > 1.0) {
         digitalWrite(buzzer_pin, HIGH);
         delay(250);
     }
@@ -80,32 +89,38 @@ void sendData() {
     BTserial.print(","); 
     BTserial.print(car_count[3]);
     BTserial.print(";"); */
+    Serial.print(speed[0]);
+    Serial.print("+");
+    Serial.print(speed[1]);
+    Serial.print("+");
+    Serial.print(speed[2]);
+    Serial.print("+");
     Serial.print(car_count[0]);
     Serial.print("+");
     Serial.print(car_count[1]);
     Serial.print("+");
     Serial.print(car_count[2]);
-    Serial.print("+");
-    Serial.print(car_count[3]);
+    /*Serial.print("+");
+    Serial.print(car_count[3]);*/
     Serial.println("");
 }
 
 int getIrVal(int pole_no){
-    if(millis() - start_time_ir[pole_no] > 1){
-        ir[pole_no].clear();
+    /*if(millis() - start_time_ir[pole_no] > 100){
         start_time_ir[pole_no] = millis();
-    }
-    ir[pole_no].add(digitalRead(st[pole_no].ir_port));
-    int k =  ir[pole_no].getMedian();
-    //ir[pole_no].clear();
+        ir[pole_no].clear();
+    }*/
+    ir[pole_no].addValue(digitalRead(st[pole_no].ir_port));
+    int k =  ir[pole_no].getAverage();
     return k;
 }
 
 void loop() {
+    //sendData();
     light_intensity = getLightIntensity();
     for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
-        //if (digitalRead(st[pole_no].ir_port) == LOW) {
-        if (getIrVal(pole_no) == LOW) {
+        if (digitalRead(st[pole_no].ir_port) == LOW) {
+        //if (getIrVal(pole_no) == LOW) {
             if (!carWent[pole_no] && light_intensity > 0) {
                 start_time[pole_no] = millis();
                 start_led(st[pole_no], pole_no);

@@ -18,8 +18,10 @@ int car_count[] = {0, 0, 0, 0};
 RunningAverage lightIntensities = RunningAverage(200);
 RunningMedian ldrValues = RunningMedian(200);
 
-
-RunningMedian ir[] = {RunningMedian(100), RunningMedian(100), RunningMedian(100), RunningMedian(100)};
+int val = 40;
+RunningAverage ir[] = {RunningAverage(val), RunningAverage(val), RunningAverage(val), RunningAverage(val)};
 
 
 unsigned long start_time_ir[] = {0, 0, 0, 0};
+
+float speed[] = {0, 0, 0};
