@@ -11,15 +11,15 @@ void setup() {
         pinMode(st[i].ir_port, INPUT);
     }
     pinMode(buzzer_pin, OUTPUT);
-    //pinMode(ldr, OUTPUT);
+    // pinMode(ldr, OUTPUT);
     Serial.begin(9600);
-    //BTserial.begin(9600);
+    // BTserial.begin(9600);
 }
 
 void start_led(street_light s, int pole_no) {
     analogWrite(s.led_port, 255);
-    //car_count[pole_no]++;
-    if(millis() - start_time_ir[pole_no] > 1000){
+    // car_count[pole_no]++;
+    if (millis() - start_time_ir[pole_no] > 1000) {
         car_count[pole_no]++;
         start_time_ir[pole_no] = millis();
     }
@@ -28,8 +28,9 @@ void start_led(street_light s, int pole_no) {
 void dim(street_light s) { analogWrite(s.led_port, light_intensity); }
 
 void speedBuzz(int pole_no) {
-    if(pole_no != 0){
-        car_count[pole_no - 1] = (car_count[pole_no - 1] > 0) ? car_count[pole_no - 1] - 1 : 0; 
+    if (pole_no != 0) {
+        car_count[pole_no - 1] =
+            (car_count[pole_no - 1] > 0) ? car_count[pole_no - 1] - 1 : 0;
     }
     sendData();
     if (pole_no == 0) {
@@ -39,7 +40,7 @@ void speedBuzz(int pole_no) {
     int t1 = start_time[pole_no - 1];
     if (t2 - t1 <= 0) return;
     float speed_ = (float)90 / (float)((t2 - t1));
-    speed[pole_no - 1 ] = speed_;
+    speed[pole_no - 1] = speed_;
     if (speed_ > 1.0) {
         digitalWrite(buzzer_pin, HIGH);
         delay(250);
@@ -72,22 +73,22 @@ void sendData() {
     Serial.println("");
 }
 
-int getIrVal(int pole_no){
+int getIrVal(int pole_no) {
     /*if(millis() - start_time_ir[pole_no] > 100){
         start_time_ir[pole_no] = millis();
         ir[pole_no].clear();
     }*/
     ir[pole_no].addValue(digitalRead(st[pole_no].ir_port));
-    int k =  ir[pole_no].getAverage();
+    int k = ir[pole_no].getAverage();
     return k;
 }
 
 void loop() {
-    //sendData();
+    // sendData();
     light_intensity = getLightIntensity();
     for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
         if (digitalRead(st[pole_no].ir_port) == LOW) {
-        //if (getIrVal(pole_no) == LOW) {
+            // if (getIrVal(pole_no) == LOW) {
             if (!carWent[pole_no] && light_intensity > 0) {
                 start_time[pole_no] = millis();
                 start_led(st[pole_no], pole_no);

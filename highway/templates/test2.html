@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% block body %}
+
+
+<div class="block1">
+    <h1>Smart Highway System </h1>
+    <img src="/static/cityscape.png" height="200" width="200">
+    <h1>Road Segment 1: <meter value="{{count[0]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car : {{speed[0]}}M/s</h1>
+    <h1>Road Segment 2:<meter value="{{count[1]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car : {{speed[1]}}M/s</h1>
+    <h1>Road Segment 3:<meter value="{{count[2]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car : {{speed[2]}}M/s</h1>
+</div>
+
+<script>
+    $("#search_form_input").keyup(function(){
+        var text = $(this).val();
+    
+        $.ajax({
+          url: "/",
+          type: "get",
+          data: {jsdata: text},
+          success: function(response) {
+            $("#place_for_suggestions").html(response);
+          },
+          error: function(xhr) {
+            //Do Something to handle error
+          }
+        });
+    });
+    ipt>
+    $("#search_form_input").keyup(function(){
+        var text = $(this).val();
+    
+        $.ajax({
+          url: "/",
+          type: "get",
+          data: {jsdata: text},
+          success: function(response) {
+            $("#place_for_suggestions").html(response);
+          },
+          error: function(xhr) {
+            //Do Something to handle error
+          }
+        });
+    });
+</script>{% endblock %}

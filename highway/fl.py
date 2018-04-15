@@ -1,36 +1,27 @@
-from flask import Flask, flash, redirect, render_template, request, session, abort
-from random import randint
+from flask import Flask, flash, redirect, render_template, request, session, abort, jsonify
+import random
 import numpy as np
-
 import os
 import serial
 import time
 
-ard = serial.Serial('com7', 9600 )
 
- 
 app = Flask(__name__)
+
+@app.route("/speed1")
+def speed1():
+    speed = random.randint(1, 100)
+    return jsonify(speed)
+
 
 
 @app.route("/")
 def hello():
-#    return name
-    count = np.array([0, 0, 0, 0])
-    speed = np.array([0.0, 0.0, 0.0])
-    max_car = 10;
-    str1 = str(ard.readline().strip())
-    i = str1.strip('\'')
-    i = str1.strip('b\'')
-    a = i.split("+")
-    for i in range(0, 3):
-        speed[i] = float(a[i])
-    for i in range(3, 6):
-        if int(a[i]) < 0:
-            count[i-3] = 0
-        else:
-            count[i-3] = int(a[i])
+    count = np.random.randint(10, size=4)
+    speed = np.random.randint(10, size=4)
     return render_template(
-        'test.html',**locals())
- 
+        'test.html', **locals())
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug = True)
