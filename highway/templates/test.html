@@ -1,24 +1,46 @@
 {% extends "layout.html" %} {% block body %}
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-<div class="container">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<div>
     <div class="block1">
         <h1>Smart Highway System </h1>
-        <img src="/static/cityscape.png" class="img-responsive" height="200" width="200">
-        <h1>Road Segment 1:
-            <meter value="{{count[0]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car :<div id="speed1">0</div> m/s</h1>
-        <h1>Road Segment 2:
-            <meter value="{{count[1]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car : {{speed[1]}} m/s</h1>
-        <h1>Road Segment 3:
-            <meter value="{{count[2]}}" min="0" max="10" low="1" high="6"></meter> Speed of last car : {{speed[2]}} m/s</h1>
+        <img src="/static/cityscape.png" height="200" width="200">
+        <h1>Road Segment 1 <meter id="mt1" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp1"></div></h1>
+        <h1>Road Segment 2 <meter id="mt2" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp2"></div></h1>
+        <h1>Road Segment 3 <meter id="mt3" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp3"></div></h1>
     </div>
 </div>
 <script type="text/javascript">
     setInterval(function () {
-        $("#speed1").load("/speed1");
-        console.log("hello")
-    }, 1000);
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('GET', "/home", true);
+        ourRequest.send();
+        ourRequest.onload = function () {
+            var data = JSON.parse(ourRequest.responseText);
+            //console.log(data);
+            setSpeed(data);
+
+        }
+
+    }
+        , 10);
+
+    function setSpeed(data) {
+        var sp1 = document.getElementById("sp1");
+        sp1.innerHTML = data.count[0] + " m/s";
+        var sp2 = document.getElementById("sp2")
+        sp2.innerHTML = data.count[1] + " m/s";
+        var sp3 = document.getElementById("sp3")
+        sp3.innerHTML = data.count[2] + " m/s";
+        var m = document.getElementById("mt1");
+        m.value = data.count[0];
+        var m = document.getElementById("mt2");
+        m.value = data.count[1];
+        var m = document.getElementById("mt3");
+        m.value = data.count[2];
+    }
+
 </script>{% endblock %}
