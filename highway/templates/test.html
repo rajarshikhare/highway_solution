@@ -8,15 +8,15 @@
     <div class="block1">
         <h1>Smart Highway System </h1>
         <img src="/static/cityscape.png" height="200" width="200">
-        <h1>Road Segment 1 <meter id="mt1" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp1"></div></h1>
-        <h1>Road Segment 2 <meter id="mt2" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp2"></div></h1>
-        <h1>Road Segment 3 <meter id="mt3" value="3" max="100" min="0"></meter> Speed of last car : <div id="sp3"></div></h1>
+        <h1>Road Segment 1 <meter id="mt1" value="3" max="100" min="0" high="70"></meter> Speed of last car : <div id="sp1"></div></h1>
+        <h1>Road Segment 2 <meter id="mt2" value="3" max="100" min="0" high="70"></meter> Speed of last car : <div id="sp2"></div></h1>
+        <h1>Road Segment 3 <meter id="mt3" value="3" max="100" min="0" high="70"></meter> Speed of last car : <div id="sp3"></div></h1>
     </div>
 </div>
 <script type="text/javascript">
     setInterval(function () {
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('GET', "/home", true);
+        ourRequest.open('GET', "/start_ardiuno", true);
         ourRequest.send();
         ourRequest.onload = function () {
             var data = JSON.parse(ourRequest.responseText);
@@ -26,7 +26,7 @@
         }
 
     }
-        , 10);
+        , 1000);
 
     function setSpeed(data) {
         var sp1 = document.getElementById("sp1");
