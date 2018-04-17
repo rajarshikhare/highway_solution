@@ -1,5 +1,6 @@
 {
+    "board": "arduino:avr:uno",
+    "output": "../build",
     "sketch": "highway.ino",
-    "port": "COM7",
-    "board": "arduino:avr:uno"
+    "port": "COM7"
 }

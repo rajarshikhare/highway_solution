@@ -12,7 +12,7 @@ def get_data():
     while True:
         #here was ardiuno code for recieving data
         count = np.random.randint(100, size=4)
-        time.sleep(1)
+        time.sleep(2)
 
 _thread.start_new_thread(get_data, ())
 

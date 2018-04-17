@@ -1,4 +1,9 @@
+#include <SoftwareSerial.h>
+#include "RunningAverage.h"
+#include "RunningMedian.h"
 #include "lights.h"
+
+SoftwareSerial BTserial(0, 1);  // RX | TX
 
 void setup() {
     for (int i = 0; i < no_of_pole; i++) {
@@ -6,87 +11,92 @@ void setup() {
         pinMode(st[i].ir_port, INPUT);
     }
     pinMode(buzzer_pin, OUTPUT);
-    digitalWrite(buzzer_pin, LOW);
-    pinMode(ldr, OUTPUT);
+    // pinMode(ldr, OUTPUT);
     Serial.begin(9600);
+    // BTserial.begin(9600);
 }
 
-bool carWent[] = {false, false};
-unsigned long start_time = 0;
-unsigned long end_time = 0;
-
-void slowON(street_light s) {
-    int i = light_intensity;
-    unsigned long s_tmp_time = millis();
-    bool ended = false;
-    int noise = 0;
-
-    while (i < 255) {
-        int diff = millis() - s_tmp_time;
-        if (diff > 2) {
-            analogWrite(s.led_port, i);
-            s_tmp_time = millis();
-            i++;
-        }
-        if (!ended && !digitalRead(s.ir_port) != HIGH) {
-            if (noise > 1000) {
-                end_time = millis();
-                ended = true;
-            } else {
-                noise++;
-            }
-        } else if (!digitalRead(s.ir_port) == HIGH) {
-            noise = 0;
-        }
-    }
-    while (!ended) {
-        if (!ended && !digitalRead(s.ir_port) != HIGH) {
-            if (noise > 1000) {
-                end_time = millis();
-                ended = true;
-            } else {
-                noise++;
-            }
-        } else if (!digitalRead(s.ir_port) == HIGH) {
-            noise = 0;
-        }
+void start_led(street_light s, int pole_no) {
+    analogWrite(s.led_port, 255);
+    // car_count[pole_no]++;
+    if (millis() - start_time_ir[pole_no] > 1000) {
+        car_count[pole_no]++;
+        start_time_ir[pole_no] = millis();
     }
 }
 
-void slowDim(street_light s, int dim_intensity) {
-    for (int i = 255; i >= dim_intensity; i--) {
-        analogWrite(s.led_port, i);
-        delay(2);
+void dim(street_light s) { analogWrite(s.led_port, light_intensity); }
+
+void speedBuzz(int pole_no) {
+    if (pole_no != 0) {
+        car_count[pole_no - 1] =
+            (car_count[pole_no - 1] > 0) ? car_count[pole_no - 1] - 1 : 0;
     }
-}
-
-void start(street_light s) { analogWrite(s.led_port, 255); }
-
-void dim(street_light s) { analogWrite(s.led_port, 10); }
-
-void buzz() {
-    int diff = end_time - start_time;
-
-    if (diff < 250) {
+    sendData();
+    if (pole_no == 0) {
+        return;
+    }
+    int t2 = start_time[pole_no];
+    int t1 = start_time[pole_no - 1];
+    if (t2 - t1 <= 0) return;
+    float speed_ = (float)90 / (float)((t2 - t1));
+    speed[pole_no - 1] = speed_;
+    if (speed_ > 1.0) {
         digitalWrite(buzzer_pin, HIGH);
         delay(250);
-        digitalWrite(buzzer_pin, LOW);
     }
+    digitalWrite(buzzer_pin, LOW);
+}
+
+int getLightIntensity() {
+    int sensorValue = analogRead(ldr);
+    ldrValues.add(sensorValue);
+    int light_intensity = 60 - map(ldrValues.getMedian(), 0, 5, 0, 255);
+    if (light_intensity < 0) light_intensity = 0;
+    lightIntensities.addValue(light_intensity);
+
+    return lightIntensities.getAverage();
+}
+
+void sendData() {
+    Serial.print(speed[0]);
+    Serial.print("+");
+    Serial.print(speed[1]);
+    Serial.print("+");
+    Serial.print(speed[2]);
+    Serial.print("+");
+    Serial.print(car_count[0]);
+    Serial.print("+");
+    Serial.print(car_count[1]);
+    Serial.print("+");
+    Serial.print(car_count[2]);
+    Serial.println("");
+}
+
+int getIrVal(int pole_no) {
+    /*if(millis() - start_time_ir[pole_no] > 100){
+        start_time_ir[pole_no] = millis();
+        ir[pole_no].clear();
+    }*/
+    ir[pole_no].addValue(digitalRead(st[pole_no].ir_port));
+    int k = ir[pole_no].getAverage();
+    return k;
 }
 
 void loop() {
-    int sensorValue = analogRead(ldr);
-    int light_intensity =  255 - map(sensorValue, 0, 2, 0, 255);
+    // sendData();
+    light_intensity = getLightIntensity();
     for (int pole_no = 0; pole_no < no_of_pole; pole_no++) {
         if (digitalRead(st[pole_no].ir_port) == LOW) {
-            if (!carWent[pole_no]) {
-                start_time = millis();
-                start(st[pole_no]);
+            // if (getIrVal(pole_no) == LOW) {
+            if (!carWent[pole_no] && light_intensity > 0) {
+                start_time[pole_no] = millis();
+                start_led(st[pole_no], pole_no);
                 carWent[pole_no] = true;
             }
         } else {
             if (carWent[pole_no]) {
-                // buzz();
+                speedBuzz(pole_no);
                 dim(st[pole_no]);
                 carWent[pole_no] = false;
             }
